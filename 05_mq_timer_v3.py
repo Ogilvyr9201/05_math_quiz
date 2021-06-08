@@ -1,17 +1,13 @@
 # timer be like 
 import time
+import signal
 
 # how does work
 # functions
-# timer countdown
-def timer(t):
-
-    print("00 : {}".format(t))
-
-    while t != 0:
-        t -= 1
-        time.sleep(1)
-        print("00 : {}".format(t))
+# handles when timer finishes that code breaks
+def timeout_handler(signal, frame):
+    raise Exception("Time is up!")
+signal.signal(signal.SIGALRM, timeout_handler)
 
 
 # Yes no checker
@@ -69,9 +65,23 @@ def num_check(question, error, num_type, low=None, high=None):
 # Main routine
 time_set = yes_no("Would you like a timer? ")
 if time_set == "yes":
-    print("Timer set! ")
+
+    # ask for the number of seconds
     seconds = num_check("how many seconds? ", "enetr an number between 1, 59", int, 0, 60)
-    timer(seconds)
+    print("Timer set! ")
+
+    # set timeout
+    signal.alarm.timeout(seconds)
+    # try and except for when time goes out
+    try: 
+        while 1 == 1:
+            name = input("What is your name? ")
+            print(name)
+            print()
+            timeout_handler()
+    except:
+        print("times up")
+
 else:
     print("No timer. ")
 print()

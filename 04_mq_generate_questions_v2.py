@@ -95,7 +95,6 @@ def question_checker(question):
 
 
 # main routine goes here
-
 # reset variables
 correct_questions = 0
 incorrect_questions = 0

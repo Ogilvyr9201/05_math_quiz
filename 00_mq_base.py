@@ -1,7 +1,9 @@
 # Imports
 import random
+import time
 
 # Functions go here
+
 # Checks which questions user would like to answer
 def question_checker(question):
     valid = False
@@ -74,6 +76,7 @@ def yes_no(question):
 
 # definition that generates questions randomly and will call this function 
 def question(symbol):
+
     valid = False
     while not valid:
         # Generate random intergers
@@ -116,31 +119,73 @@ while play_again == "yes":
     num_questions_error = "<error> enter an interger"
     num_questions = num_check("How many questions? ", num_questions_error, int, 0)
     print()
+    
+    
+    time_set = yes_no("Would you like a timer? ")
+    if time_set == "yes":
+        # Ask user for the amount of time they get for the questions
+        seconds = num_check("how many seconds? ", "enetr an number between 1, 59", int, 0, 60)
+        print("Timer set! ")
+        print()
+        # setting timer
+        start = time.time()
 
+        # Generate questions
+        while time.time() - start < seconds:
 
-    # Generate questions
-    while num_questions > 0:
-        # generates questions depending on what type you choose
-        if question_type == "a":
-            result = question("+")
-        elif question_type == "s":
-            result = question("-")
-        elif question_type == "m":
-            result = question("x")
-        elif question_type == "d":
-            result = question("/")
-        else:
-            result = question(random.choice(symbol_list))
+            # generates questions depending on what type you choose
+            if question_type == "a":
+                result = question("+")
+            elif question_type == "s":
+                result = question("-")
+            elif question_type == "m":
+                result = question("x")
+            elif question_type == "d":
+                result = question("/")
+            elif question_type == "":
+                result = question(random.choice(symbol_list))
+            else:
+                continue
+            
 
-        # Add result to a list and add number of correct and incorrect questions
-        if result == "correct":
-            correct_questions += 1
-        else:
-            incorrect_questions += 1
-        questions_list.append("Question #1: {}".format(result))
+            # Add result to a list and add number of correct and incorrect questions
+            if result == "correct":
+                correct_questions += 1
+            else:
+                incorrect_questions += 1
+            questions_list.append("Question #1: {}".format(result))
+            
+            # number of questions left go down
+            num_questions -= 1
         
-        # number of questions left go down
-        num_questions -= 1
+    # No timer
+    else:
+        print("No Timer")
+
+        # Generate questions
+        while num_questions > 0:
+
+            # generates questions depending on what type you choose
+            if question_type == "a":
+                result = question("+")
+            elif question_type == "s":
+                result = question("-")
+            elif question_type == "m":
+                result = question("x")
+            elif question_type == "d":
+                result = question("/")
+            else:
+                    result = question(random.choice(symbol_list))
+
+            # Add result to a list and add number of correct and incorrect questions
+            if result == "correct":
+                correct_questions += 1
+            else:
+                incorrect_questions += 1
+            questions_list.append("Question #1: {}".format(result))
+            
+            # number of questions left go down
+            num_questions -= 1
 
     print("Question answered correctly", correct_questions)
     print("Question answered incorrectly", incorrect_questions)
