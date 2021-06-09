@@ -142,11 +142,8 @@ while play_again == "yes":
                 result = question("x")
             elif question_type == "d":
                 result = question("/")
-            elif question_type == "":
-                result = question(random.choice(symbol_list))
             else:
-                continue
-            
+                result = question(random.choice(symbol_list))
 
             # Add result to a list and add number of correct and incorrect questions
             if result == "correct":

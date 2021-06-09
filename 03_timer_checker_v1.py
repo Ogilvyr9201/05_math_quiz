@@ -19,10 +19,9 @@ def yes_no(question):
 
 # Main routine
 # looped for tesing
-while 1 == 1:
-    time_set = yes_no("Would you like a timer? ")
-    if time_set == "yes":
-        print("Timer set! ")
-    else:
-        print("No timer. ")
-    print()
+time_set = yes_no("Would you like a timer? ")
+if time_set == "yes":
+    print("Timer set! ")
+else:
+    print("No timer. ")
+print()

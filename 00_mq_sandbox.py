@@ -1,12 +1,7 @@
-# timer be like 
+# time.clock() function
+
 import time
 
-# how does work
-# functions
-def timer(t):
-    while t != 0:
-        print("00 : {}".format(t))
-        t -= 1
-        time.sleep(t)
-
-timer(3)
+for i in range(1, 100):
+    print("%f" % time.clock())
+    time.sleep(1)
