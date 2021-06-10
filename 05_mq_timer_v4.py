@@ -7,9 +7,9 @@ import time
 def timeout_handler(num_seconds):
     # set timer 
     start = time.time()
+
     if time.time() - start == num_seconds:
         return "times up"
-
 
 
 # Yes no checker

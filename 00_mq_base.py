@@ -103,6 +103,7 @@ play_again = "yes"
 while play_again == "yes":
 
     # reset variables
+    questions_answered = 0
     correct_questions = 0
     incorrect_questions = 0
     questions_list = []
@@ -145,15 +146,21 @@ while play_again == "yes":
             else:
                 result = question(random.choice(symbol_list))
 
-            # Add result to a list and add number of correct and incorrect questions
+            # Add number of correct and incorrect questions
             if result == "correct":
                 correct_questions += 1
-            else:
+            elif result == "incorrect":
                 incorrect_questions += 1
-            questions_list.append("Question #1: {}".format(result))
+
+            # Add number of questions answered
+            questions_answered += 1
+
+            # add question resu;t tpo a list
+            questions_list.append("Question #{}: {}".format(result))
             
             # number of questions left go down
             num_questions -= 1
+
         
     # No timer
     else:
@@ -174,15 +181,45 @@ while play_again == "yes":
             else:
                     result = question(random.choice(symbol_list))
 
-            # Add result to a list and add number of correct and incorrect questions
+            # Add number of correct and incorrect questions
             if result == "correct":
                 correct_questions += 1
-            else:
+            elif result == "incorrect":
                 incorrect_questions += 1
-            questions_list.append("Question #1: {}".format(result))
+
+            # Add number of questions answered
+            questions_answered += 1
+
+            # Add question result to a list
+            questions_list.append("Question #{}: {}".format(questions_answered + 1, result))
             
             # number of questions left go down
             num_questions -= 1
 
-    print("Question answered correctly", correct_questions)
-    print("Question answered incorrectly", incorrect_questions)
+    # **** Calculate Game Stats ****
+    percent_correct = correct_questions / questions_answered * 100
+    percent_incorrect = incorrect_questions / questions_answered * 100
+
+    # Displays game stats with % values to the nearest whole number
+    print()
+    print("**** Quiz Statistics ****")
+    print("Win: {}: ({:.0f}%)\nLoss: {}: ({:.0f}%)".format(correct_questions, percent_correct, incorrect_questions, percent_incorrect))
+    print()
+
+    # Asks user if they want to see there history
+    show_history = yes_no("would you like to see game history? ")
+
+    # displays history if user says yes
+    if show_history == "yes":
+        print()
+        print("**** Quiz History ****")
+        for quiz in questions_list:
+            print(quiz)
+
+        print()
+        print("Thanks for playing")
+
+    # Doesnt display history if user says no
+    elif show_history == "no":
+        print()
+        print("Thanks for Playing")
