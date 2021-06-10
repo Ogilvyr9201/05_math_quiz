@@ -75,19 +75,26 @@ def yes_no(question):
 
 
 # definition that generates questions randomly and will call this function 
-def question(symbol):
+def question(symbol, points_val):
 
     valid = False
     while not valid:
+
+        # Question error if they input unexpected values
+        q_error = "Please enter an interger between 0 - 1000 (dont be dumb)"
+
         # Generate random intergers
-        int_i = random.randint(1, 100)
-        int_ii = random.randint(1, 100)
+        temp_int = random.randint(1, 10)
+        int_i = random.randint(1, 10)
+        int_ii = temp_int * int_i
 
-        ans = eval(str(int_i) + symbol + str(int_ii))
-        response = float(input("{} {} {} = ".format(int_i, symbol, int_ii)))
+        # Get answer and there answer to the question
+        ans = eval(str(int_ii) + symbol + str(int_i))
+        response = num_check("{} {} {} = ".format(int_ii, symbol, int_i), q_error, int, -1, 1000)
 
+        # check if user got answer correct
         if response == ans:
-            print("You got it right")
+            print("You got it right! +{} points".format(points_val))
             result = "correct"
             print()
             return result
@@ -97,8 +104,11 @@ def question(symbol):
             print()
             return result
 
-
 # main routine
+# define the saved points 
+save_points = 0
+
+# Main quiz code
 play_again = "yes"
 while play_again == "yes":
 
@@ -106,6 +116,7 @@ while play_again == "yes":
     questions_answered = 0
     correct_questions = 0
     incorrect_questions = 0
+    points = 0
     questions_list = []
 
     # symbol list
@@ -114,7 +125,6 @@ while play_again == "yes":
     # ask user for which type of questions they would like
     question_type = question_checker("Which type of questions would you like? ")
     print()
-
 
     # ask uesr for number of questions
     num_questions_error = "<error> enter an interger"
@@ -136,27 +146,34 @@ while play_again == "yes":
 
             # generates questions depending on what type you choose
             if question_type == "a":
-                result = question("+")
+                result = question("+", 10)
+                num_points = 10
             elif question_type == "s":
-                result = question("-")
+                result = question("-", 25)
+                num_points = 25
             elif question_type == "m":
-                result = question("x")
+                result = question("x", 50)
+                num_points = 50
             elif question_type == "d":
-                result = question("/")
+                result = question("/", 50)
+                num_points = 50
             else:
-                result = question(random.choice(symbol_list))
+                result = question(random.choice(symbol_list), 50)
+                num_points = 50
 
             # Add number of correct and incorrect questions
             if result == "correct":
                 correct_questions += 1
+                points += num_points
             elif result == "incorrect":
                 incorrect_questions += 1
+                points -= 10
 
             # Add number of questions answered
             questions_answered += 1
 
             # add question resu;t tpo a list
-            questions_list.append("Question #{}: {}".format(result))
+            questions_list.append("Question #{}: {} - {} points".format(result, points))
             
             # number of questions left go down
             num_questions -= 1
@@ -171,27 +188,34 @@ while play_again == "yes":
 
             # generates questions depending on what type you choose
             if question_type == "a":
-                result = question("+")
+                result = question("+", 10)
+                num_points = 10
             elif question_type == "s":
-                result = question("-")
+                result = question("-", 25)
+                num_points = 25
             elif question_type == "m":
-                result = question("x")
+                result = question("x", 50)
+                num_points = 50
             elif question_type == "d":
-                result = question("/")
+                result = question("/", 50)
+                num_points = 50
             else:
-                    result = question(random.choice(symbol_list))
-
+                result = question(random.choice(symbol_list), 50)
+                num_points = 50
+            
             # Add number of correct and incorrect questions
             if result == "correct":
                 correct_questions += 1
+                points += num_points
             elif result == "incorrect":
                 incorrect_questions += 1
+                points -= 10
 
             # Add number of questions answered
             questions_answered += 1
 
             # Add question result to a list
-            questions_list.append("Question #{}: {}".format(questions_answered + 1, result))
+            questions_list.append("Question #{}: {}".format(questions_answered, result))
             
             # number of questions left go down
             num_questions -= 1
@@ -203,8 +227,17 @@ while play_again == "yes":
     # Displays game stats with % values to the nearest whole number
     print()
     print("**** Quiz Statistics ****")
-    print("Win: {}: ({:.0f}%)\nLoss: {}: ({:.0f}%)".format(correct_questions, percent_correct, incorrect_questions, percent_incorrect))
+    print("Correct: {}: ({:.0f}%)\nIncorrect: {}: ({:.0f}%)".format(correct_questions, percent_correct, incorrect_questions, percent_incorrect))
     print()
+
+    # Print and figure out new high score 
+    if points > save_points:
+        print("NEW HIGH SCORE")
+    else:
+        print("Nice Job!")
+    print("Total points: ", points)
+    print()
+
 
     # Asks user if they want to see there history
     show_history = yes_no("would you like to see game history? ")
