@@ -104,9 +104,56 @@ def question(symbol, points_val):
             print()
             return result
 
+
+# function will print instructions when called
+def instructions():
+    statement_generator("Instructions", "|", "-")
+    print("There are 5 modes you can choose:")
+    print()
+    print("- Addition, a: 10 points for being correct")
+    print("- Subtraction, s: 25 points for being correct")
+    print("- Multiplication, m: 50 points for being correct")
+    print("- Division, d: 50 points for being correct")
+    print("- All, '': 50 points for being correct")
+    print()
+    print("Try to answer as many questions as possible.")
+    print("You can have a timer and see if you can do ")
+    print("all the questions in the set time. Every")
+    print("incorrect question removes 10 points.")
+    return ""
+
+
+# Gives statements decoration on sides and top
+def statement_generator(statement, side_decoration, top_bottom_decoration):
+
+    sides = side_decoration * 3
+
+    statement = "{} {} {}".format(sides, statement, sides)
+
+    top_bottom = top_bottom_decoration * len(statement)
+
+
+    print(top_bottom)
+    print(statement)
+    print(top_bottom)
+
+    return ""
+
+
 # main routine
+statement_generator("Welcome to Rizzos Math Quiz", "!", "=")
+print()
+
 # define the saved points 
 save_points = 0
+
+# asks if user has played before
+# if no print instructions 
+played_before = yes_no("Have you played before? ")
+if played_before == "no":
+    instructions()
+print()
+print("Enjoy!")
 
 # Main quiz code
 play_again = "yes"
@@ -124,12 +171,10 @@ while play_again == "yes":
 
     # ask user for which type of questions they would like
     question_type = question_checker("Which type of questions would you like? ")
-    print()
 
     # ask uesr for number of questions
     num_questions_error = "<error> enter an interger"
     num_questions = num_check("How many questions? ", num_questions_error, int, 0)
-    print()
     
     
     time_set = yes_no("Would you like a timer? ")
