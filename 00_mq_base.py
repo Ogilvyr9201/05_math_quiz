@@ -90,16 +90,16 @@ def question(symbol, points_val):
 
         # Get answer and there answer to the question
         ans = eval(str(int_ii) + symbol + str(int_i))
-        response = num_check("{} {} {} = ".format(int_ii, symbol, int_i), q_error, int, -1, 1000)
+        response = num_check("{} {} {} = ".format(int_ii, symbol, int_i), q_error, int, -1, 1001)
 
         # check if user got answer correct
         if response == ans:
-            print("You got it right! +{} points".format(points_val))
+            statement_generator("You got it right! +{} points".format(points_val), "*", "~")
             result = "correct"
             print()
             return result
         else:
-            print("You got it wrong")
+            statement_generator("You got it wrong. -10 points", "|", "-")
             result = "incorrect"
             print()
             return result
@@ -140,9 +140,19 @@ def statement_generator(statement, side_decoration, top_bottom_decoration):
     return ""
 
 
+# timer function stalls program and counts down
+def timer(t):
+
+    print("00 : {}".format(t))
+
+    while t != 0:
+        t -= 1
+        time.sleep(1)
+        print("00 : {}".format(t))
+
+
 # main routine
 statement_generator("Welcome to Rizzos Math Quiz", "!", "=")
-print()
 
 # define the saved points 
 save_points = 0
@@ -176,12 +186,19 @@ while play_again == "yes":
     num_questions_error = "<error> enter an interger"
     num_questions = num_check("How many questions? ", num_questions_error, int, 0)
     
-    
+    # ask user if they want a timer 
     time_set = yes_no("Would you like a timer? ")
+
     if time_set == "yes":
         # Ask user for the amount of time they get for the questions
         seconds = num_check("how many seconds? ", "enetr an number between 1, 59", int, 0, 60)
         print("Timer set! ")
+
+    # countdown 3, 2, 1, go  uses v1 of timer
+    timer(3)
+
+    if time_set == "yes":
+        
         print()
         # setting timer
         start = time.time()
@@ -217,8 +234,8 @@ while play_again == "yes":
             # Add number of questions answered
             questions_answered += 1
 
-            # add question resu;t tpo a list
-            questions_list.append("Question #{}: {} - {} points".format(result, points))
+            # Add question result to a list
+            questions_list.append("Question #{}: {}".format(questions_answered, result))
             
             # number of questions left go down
             num_questions -= 1
@@ -226,7 +243,7 @@ while play_again == "yes":
         
     # No timer
     else:
-        print("No Timer")
+        print()
 
         # Generate questions
         while num_questions > 0:
@@ -271,7 +288,7 @@ while play_again == "yes":
 
     # Displays game stats with % values to the nearest whole number
     print()
-    print("**** Quiz Statistics ****")
+    statement_generator("Quiz Statistics", "-", "*")
     print("Correct: {}: ({:.0f}%)\nIncorrect: {}: ({:.0f}%)".format(correct_questions, percent_correct, incorrect_questions, percent_incorrect))
     print()
 
@@ -290,14 +307,23 @@ while play_again == "yes":
     # displays history if user says yes
     if show_history == "yes":
         print()
-        print("**** Quiz History ****")
+        statement_generator("Quiz History", "-", "*")
         for quiz in questions_list:
             print(quiz)
 
         print()
-        print("Thanks for playing")
+        statement_generator("Thanks for playing", "!", "=")
 
     # Doesnt display history if user says no
     elif show_history == "no":
         print()
-        print("Thanks for Playing")
+        statement_generator("Thanks for playing", "!", "=")
+    
+    # Ask user if they want to play again
+    print()
+    play_again = yes_no("Would you like to play again? ")
+    if play_again == "yes":
+        print()
+        continue
+    else:
+        play_again = "no"
