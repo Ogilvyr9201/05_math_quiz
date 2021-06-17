@@ -2,6 +2,14 @@
 import random
 import time
 
+
+# reset variables
+questions_answered = 0
+correct_questions = 0
+incorrect_questions = 0
+points = 0
+questions_list = []
+
 # Functions go here
 
 # Checks which questions user would like to answer
@@ -24,13 +32,19 @@ def question_checker(question):
 
 
 # Number checker to make sure user inputs correctly
-def num_check(question, error, num_type, low=None, high=None):
+def num_check(question, error, num_type, exit_code=None, low=None, high=None):
 
     valid = False
     while not valid:
         try:
-            response = num_type(input(question))
-
+            # Checks if user inputs exit code
+            response = input(question)
+            if response == exit_code:
+                return response
+            else:
+                response = num_type(response)
+            
+            # Checks if they inputed correct number
             if low is not None and high is not None:
                 if low < response < high:
                     return response
@@ -90,17 +104,28 @@ def question(symbol, points_val):
 
         # Get answer and there answer to the question
         ans = eval(str(int_ii) + symbol + str(int_i))
-        response = num_check("{} {} {} = ".format(int_ii, symbol, int_i), q_error, int, -1, 1001)
+        response = num_check("{} {} {} = ".format(int_ii, symbol, int_i), q_error, int, "xxx",  -1, 1001)
+
+        # If user quits
+        if response == "xxx":
+            print("You quit")
+            result = "quit"
+            return result
 
         # check if user got answer correct
-        if response == ans:
+        if response == ans and time.time() - start < seconds:
             statement_generator("You got it right! +{} points".format(points_val), "*", "~")
             result = "correct"
             print()
             return result
-        else:
+        elif response != ans:
             statement_generator("You got it wrong. -10 points", "|", "-")
             result = "incorrect"
+            print()
+            return result
+        else:
+            statement_generator("Time ran out no points", "|", "-")
+            result = "quit"
             print()
             return result
 
@@ -180,107 +205,73 @@ while play_again == "yes":
     symbol_list = ["+", "-", "*", "/"]
 
     # ask user for which type of questions they would like
-    question_type = question_checker("Which type of questions would you like? ")
+    question_type = question_checker("Which type of questions would you like? (a, s, m, d, '') ")
 
     # ask uesr for number of questions
     num_questions_error = "<error> enter an interger"
-    num_questions = num_check("How many questions? ", num_questions_error, int, 0)
+    num_questions = num_check("How many questions? ", num_questions_error, int, None, 0)
     
     # ask user if they want a timer 
     time_set = yes_no("Would you like a timer? ")
 
     if time_set == "yes":
         # Ask user for the amount of time they get for the questions
-        seconds = num_check("how many seconds? ", "enetr an number between 1, 59", int, 0, 60)
+        seconds = num_check("how many seconds? ", "enetr an number between 1, 59", int, None, 0, 60)
         print("Timer set! ")
-
-    # countdown 3, 2, 1, go  uses v1 of timer
-    timer(3)
-
-    if time_set == "yes":
-        
-        print()
-        # setting timer
+        # Set start
         start = time.time()
 
-        # Generate questions
-        while time.time() - start < seconds:
-
-            # generates questions depending on what type you choose
-            if question_type == "a":
-                result = question("+", 10)
-                num_points = 10
-            elif question_type == "s":
-                result = question("-", 25)
-                num_points = 25
-            elif question_type == "m":
-                result = question("x", 50)
-                num_points = 50
-            elif question_type == "d":
-                result = question("/", 50)
-                num_points = 50
-            else:
-                result = question(random.choice(symbol_list), 50)
-                num_points = 50
-
-            # Add number of correct and incorrect questions
-            if result == "correct":
-                correct_questions += 1
-                points += num_points
-            elif result == "incorrect":
-                incorrect_questions += 1
-                points -= 10
-
-            # Add number of questions answered
-            questions_answered += 1
-
-            # Add question result to a list
-            questions_list.append("Question #{}: {}".format(questions_answered, result))
-            
-            # number of questions left go down
-            num_questions -= 1
-
-        
     # No timer
     else:
-        print()
+        start = time.time() * 10000
+        seconds = 1
 
-        # Generate questions
-        while num_questions > 0:
+    # Generate questions
+    while time.time() - start < seconds and num_questions > 0:
 
-            # generates questions depending on what type you choose
-            if question_type == "a":
-                result = question("+", 10)
-                num_points = 10
-            elif question_type == "s":
-                result = question("-", 25)
-                num_points = 25
-            elif question_type == "m":
-                result = question("x", 50)
-                num_points = 50
-            elif question_type == "d":
-                result = question("/", 50)
-                num_points = 50
-            else:
-                result = question(random.choice(symbol_list), 50)
-                num_points = 50
-            
-            # Add number of correct and incorrect questions
-            if result == "correct":
-                correct_questions += 1
-                points += num_points
-            elif result == "incorrect":
-                incorrect_questions += 1
-                points -= 10
+        # generates questions depending on what type you choose
+        if question_type == "a":
+            result = question("+", 10)
+            num_points = 10
+        elif question_type == "s":
+            result = question("-", 25)
+            num_points = 25
+        elif question_type == "m":
+            result = question("x", 50)
+            num_points = 50
+        elif question_type == "d":
+            result = question("/", 50)
+            num_points = 50
+        else:
+            result = question(random.choice(symbol_list), 50)
+            num_points = 50
+        
+        # Add number of correct and incorrect questions
+        if result == "correct":
+            correct_questions += 1
+            points += num_points
+        elif result == "incorrect":
+            incorrect_questions += 1
+            points -= 10
+        else:
+            questions_answered -= 1
+            break
 
-            # Add number of questions answered
-            questions_answered += 1
+        # Add number of questions answered
+        questions_answered += 1
 
-            # Add question result to a list
-            questions_list.append("Question #{}: {}".format(questions_answered, result))
-            
-            # number of questions left go down
-            num_questions -= 1
+        # Add question result to a list
+        questions_list.append("Question #{}: {}".format(questions_answered, result))
+        
+        # number of questions left go down
+        num_questions -= 1
+
+
+    
+    print(questions_answered)
+    print(correct_questions)
+    print(incorrect_questions)
+
 
     # **** Calculate Game Stats ****
     percent_correct = correct_questions / questions_answered * 100
@@ -295,6 +286,7 @@ while play_again == "yes":
     # Print and figure out new high score 
     if points > save_points:
         print("NEW HIGH SCORE")
+        save_points = points
     else:
         print("Nice Job!")
     print("Total points: ", points)
