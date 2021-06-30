@@ -3,32 +3,27 @@ import random
 import time
 
 
-# reset variables
-questions_answered = 0
-correct_questions = 0
-incorrect_questions = 0
-points = 0
-questions_list = []
-
 # Functions go here
-
 # Checks which questions user would like to answer
-def question_checker(question):
-    valid = False
-    while not valid:
+def string_checker(question, list, error):
 
-        response = input(question).lower()
-        # set list  of the type of questions
-        ques_type_list = ["a", "s", "m", "d", ""]
+        valid = False
+        while not valid:
 
-        # Checks how long word is
-        if response not in ques_type_list:
-            print("<error> please first letter of math question eg: a for addition\n"
-            "OR press <eneter> for all types of questions")
+            # ask user for choice (.lower choice)
+            response = input(question).lower()
+
+            # iterates through list and if response is an item
+            # in the list (or the first letter of an item), the
+            # full item name is returned
+
+            for item in list:
+                if response == item[0] or response == item:
+                    return item
+
+            # output error message
+            print(error)
             print()
-            continue
-        else:
-            return response
 
 
 # Number checker to make sure user inputs correctly
@@ -66,25 +61,6 @@ def num_check(question, error, num_type, exit_code=None, low=None, high=None):
 
         except ValueError:
             print(error)
-            print()
-
-
-# Checks for yes or no responses
-def yes_no(question):
-    valid = False
-    while not valid:
-        response = input(question).lower()
-
-        if response == "yes" or response == "y":
-            response = "yes"
-            return response
-
-        elif response == "no" or response == "n":
-            response = "no"
-            return response
-
-        else:
-            print("<error> Please say yes or no")
             print()
 
 
@@ -184,9 +160,18 @@ statement_generator("Welcome to Rizzos Math Quiz", "!", "=")
 # define the saved points 
 save_points = 0
 
+# question type error and yes_no error
+ques_type_error = "Error please say either a, s, m, d, or enter for all"
+yes_no_error = "<error> Please say yes or no"
+
+# lists
+ques_type_list = ["addition", "subtraction", "multiplication", "division", ""]
+yes_no_list = ["yes", "no"]
+symbol_list = ["+", "-", "*", "/"]
+
 # asks if user has played before
 # if no print instructions 
-played_before = yes_no("Have you played before? ")
+played_before = string_checker("Have you played before? ", yes_no_list, yes_no_error)
 if played_before == "no":
     instructions()
 print("Enjoy!")
@@ -202,18 +187,15 @@ while play_again == "yes":
     points = 0
     questions_list = []
 
-    # symbol list
-    symbol_list = ["+", "-", "*", "/"]
-
     # ask user for which type of questions they would like
-    question_type = question_checker('Which type of questions would you like? (a, s, m, d, " ") ')
+    question_type = string_checker('Which type of questions would you like? (a, s, m, d, " ") ', ques_type_list, ques_type_error)
 
     # ask uesr for number of questions
     num_questions_error = "<error> enter an interger"
     num_questions = num_check("How many questions? ", num_questions_error, int, None, 0)
     
     # ask user if they want a timer 
-    time_set = yes_no("Would you like a timer? ")
+    time_set = string_checker("Would you like a timer? ", yes_no_list, yes_no_error)
 
     if time_set == "yes":
         # Ask user for the amount of time they get for the questions
@@ -296,7 +278,7 @@ while play_again == "yes":
 
 
     # Asks user if they want to see there history
-    show_history = yes_no("Would you like to see game history? ")
+    show_history = string_checker("Would you like to see game history? ", yes_no_list, yes_no_error)
 
     # displays history if user says yes
     if show_history == "yes":
@@ -315,7 +297,7 @@ while play_again == "yes":
     
     # Ask user if they want to play again
     print()
-    play_again = yes_no("Would you like to play again? ")
+    play_again = string_checker("Would you like to play again? ", yes_no_list, yes_no_error)
     if play_again == "yes":
         print()
         continue
