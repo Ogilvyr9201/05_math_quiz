@@ -9,21 +9,26 @@ def string_checker(question, list, error):
 
         valid = False
         while not valid:
+            try:
+                # ask user for choice (.lower choice)
+                response = input(question).lower()
 
-            # ask user for choice (.lower choice)
-            response = input(question).lower()
+                # iterates through list and if response is an item
+                # in the list (or the first letter of an item), the
+                # full item name is returned
 
-            # iterates through list and if response is an item
-            # in the list (or the first letter of an item), the
-            # full item name is returned
+                for item in list:
+                    if response == item[0] or response == item:
+                        return item
+                
+                # print error if not in list
+                print(error)
+                print()     
 
-            for item in list:
-                if response == item[0] or response == item:
-                    return item
-
-            # output error message
-            print(error)
-            print()
+            except IndexError:
+                # output error message
+                print(error)
+                print()
 
 
 # Number checker to make sure user inputs correctly
@@ -177,7 +182,7 @@ while play_again == "yes":
     questions_list = []
 
     # ask user for which type of questions they would like
-    question_type = string_checker('Which type of questions would you like? (a, s, m, d, " ") ', ques_type_list, ques_type_error)
+    question_type = string_checker('Which type of questions would you like? (a, s, m, d, "") ', ques_type_list, ques_type_error)
 
     # ask uesr for number of questions
     num_questions_error = "<error> enter an interger"
