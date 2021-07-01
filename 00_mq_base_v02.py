@@ -143,17 +143,6 @@ def statement_generator(statement, side_decoration, top_bottom_decoration):
     return ""
 
 
-# timer function stalls program and counts down
-def timer(t):
-
-    print("00 : {}".format(t))
-
-    while t != 0:
-        t -= 1
-        time.sleep(1)
-        print("00 : {}".format(t))
-
-
 # main routine
 statement_generator("Welcome to Rizzos Math Quiz", "!", "=")
 
